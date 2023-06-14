@@ -59,15 +59,14 @@ const Home = () => {
             <div className={styles.cell} key={`${x}-${y}`} onClick={() => onClick(x, y)}>
               {color !== 0 && (
                 <div className={styles.stone} style={{ background: color === 1 ? `#000` : '#fff' }}>
-                  {/* <div className = {styles.empty}> {turncolor: }</div> */}
-                  {' '}
-                  </div>
+                  {/* <div className = {styles.empty}> {turncolor: }</div> */}{' '}
+                </div>
               )}
             </div>
           ))
         )}
       </div>
-      <div className = {styles.turn}>{turnColor=== 1 ? '黒のターン': '白のターン'}</div>
+      <div className={styles.turn}>{turnColor === 1 ? '黒のターン' : '白のターン'}</div>
     </div>
   );
 };
