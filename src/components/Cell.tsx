@@ -1,4 +1,4 @@
-import styles from "./cell.module.css";
+import styles from './cell.module.css';
 export const Cell = (props: { x: number; y: number; color: number; onClick: () => void }) => {
   return (
     <div className={styles.line} onClick={props.onClick}>
