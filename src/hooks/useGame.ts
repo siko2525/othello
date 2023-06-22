@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-export const useGame = ( ) => {
+export const useGame = () => {
   const [turnColor, setTurnColor] = useState(1);
   const [board, setBoard] = useState([
     [0, 0, 0, 0, 0, 0, 0, 0],
@@ -50,5 +50,5 @@ export const useGame = ( ) => {
 
     setBoard(newBoard);
   };
-  return {board, turnColor, onClick}
-  }
+  return { board, turnColor, onClick };
+};
