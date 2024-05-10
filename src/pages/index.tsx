@@ -26,11 +26,6 @@ const Home = () => {
   const onClick = (x: number, y: number) => {
     console.log(x, y);
     const newBoard: number[][] = JSON.parse(JSON.stringify(board));
-    // if (board[y + 1] !== undefined && board[y + 1][x] !== 0 && board[y + 1][x] !== turnColor) {
-    //   console.log(turnColor);
-    //   newBoard[y][x] = turnColor;
-    //   console.table(newBoard);
-    // }
     for (const dir of directions) {
       for (let i = 1; i < 8; i++) {
         if (newBoard[y + i * dir[1]] === undefined) {
@@ -39,7 +34,7 @@ const Home = () => {
           for (let a = 0; a < i; a++) {
             newBoard[y + a * dir[1]][x + a * dir[0]] = turnColor;
           }
-          setTurnColor(-turnColor + 3);
+          setTurnColor(3 - turnColor);
           break;
         } else if (newBoard[y + i * dir[1]][x + i * dir[0]] === turnColor) {
           break;
@@ -51,6 +46,31 @@ const Home = () => {
 
     setBoard(newBoard);
   };
+
+  const judgement = (x: number, y: number) => {
+    console.log(x, y);
+    const newBoard: number[][] = JSON.parse(JSON.stringify(board));
+    for (const dir of directions) {
+      for (let i = 1; i < 8; i++) {
+        if (newBoard[y + i * dir[1]] === undefined) {
+          break;
+        } else if (newBoard[y + i * dir[1]][x + i * dir[0]] === turnColor && i !== 1) {
+          for (let a = 0; a < i; a++) {
+            newBoard[y + a * dir[1]][x + a * dir[0]] = turnColor;
+          }
+          setTurnColor(3 - turnColor);
+          break;
+        } else if (newBoard[y + i * dir[1]][x + i * dir[0]] === turnColor) {
+          break;
+        } else if (newBoard[y + i * dir[1]][x + i * dir[0]] === 0) {
+          break;
+        }
+      }
+    }
+
+    return false;
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.board}>
