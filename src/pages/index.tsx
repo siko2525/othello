@@ -24,27 +24,7 @@ const Home = () => {
     [1, -1],
   ];
   const onClick = (x: number, y: number) => {
-    console.log(x, y);
-    const newBoard: number[][] = JSON.parse(JSON.stringify(board));
-    for (const dir of directions) {
-      for (let i = 1; i < 8; i++) {
-        if (newBoard[y + i * dir[1]] === undefined) {
-          break;
-        } else if (newBoard[y + i * dir[1]][x + i * dir[0]] === turnColor && i !== 1) {
-          for (let a = 0; a < i; a++) {
-            newBoard[y + a * dir[1]][x + a * dir[0]] = turnColor;
-          }
-          setTurnColor(3 - turnColor);
-          break;
-        } else if (newBoard[y + i * dir[1]][x + i * dir[0]] === turnColor) {
-          break;
-        } else if (newBoard[y + i * dir[1]][x + i * dir[0]] === 0) {
-          break;
-        }
-      }
-    }
-
-    setBoard(newBoard);
+    judgement(x, y);
   };
 
   const judgement = (x: number, y: number) => {
@@ -67,8 +47,7 @@ const Home = () => {
         }
       }
     }
-
-    return false;
+    setBoard(newBoard);
   };
 
   return (
