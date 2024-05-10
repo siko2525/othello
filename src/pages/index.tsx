@@ -6,10 +6,10 @@ const Home = () => {
   const [board, setBoard] = useState([
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 2, 1, 0, 0, 0],
-    [0, 0, 0, 1, 2, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 3, 0, 0, 0, 0],
+    [0, 0, 3, 2, 1, 0, 0, 0],
+    [0, 0, 0, 1, 2, 3, 0, 0],
+    [0, 0, 0, 0, 3, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
   ]);
@@ -24,30 +24,55 @@ const Home = () => {
     [1, -1],
   ];
   const onClick = (x: number, y: number) => {
-    judgement(x, y);
+    const newBoard = structuredClone(board);
+    flipSide(newBoard, x, y);
+    for (let i = 1; i < 8; i++) {
+      for (let l = 1; l < 8; l++) {
+        judgement(newBoard, i, l);
+      }
+    }
+    setBoard(newBoard);
   };
 
-  const judgement = (x: number, y: number) => {
-    console.log(x, y);
-    const newBoard: number[][] = JSON.parse(JSON.stringify(board));
+  const flipSide = (board: number[][], x: number, y: number) => {
+    if (board[y][x] === 0) return;
+    console.log('nya~n');
     for (const dir of directions) {
-      for (let i = 1; i < 8; i++) {
-        if (newBoard[y + i * dir[1]] === undefined) {
+      for (let index = 1; index < 8; index++) {
+        if (board[y + index * dir[1]] === undefined) {
           break;
-        } else if (newBoard[y + i * dir[1]][x + i * dir[0]] === turnColor && i !== 1) {
-          for (let a = 0; a < i; a++) {
-            newBoard[y + a * dir[1]][x + a * dir[0]] = turnColor;
+        } else if (board[y + index * dir[1]][x + index * dir[0]] === turnColor && index !== 1) {
+          for (let a = 0; a < index; a++) {
+            board[y + a * dir[1]][x + a * dir[0]] = turnColor;
           }
           setTurnColor(3 - turnColor);
           break;
-        } else if (newBoard[y + i * dir[1]][x + i * dir[0]] === turnColor) {
+        } else if (board[y + index * dir[1]][x + index * dir[0]] === turnColor) {
           break;
-        } else if (newBoard[y + i * dir[1]][x + i * dir[0]] === 0) {
+        } else if (board[y + index * dir[1]][x + index * dir[0]] === 0) {
           break;
         }
       }
     }
-    setBoard(newBoard);
+  };
+
+  const judgement = (board: number[][], x: number, y: number) => {
+    if (board[y][x] % 3 !== 0) return;
+    board[y][x] %= 3;
+    for (const dir of directions) {
+      for (let i = 1; i < 8; i++) {
+        if (board[y + i * dir[1]] === undefined) {
+          break;
+        } else if (board[y + i * dir[1]][x + i * dir[0]] % 3 === 0) {
+          break;
+        } else if (board[y + i * dir[1]][x + i * dir[0]] === 3 - turnColor && i !== 1) {
+          board[y][x] = 3;
+          break;
+        } else if (board[y + i * dir[1]][x + i * dir[0]] === (turnColor % 2) + 1) {
+          break;
+        }
+      }
+    }
   };
 
   return (
@@ -57,7 +82,10 @@ const Home = () => {
           row.map((color, x) => (
             <div className={styles.cell} key={`${x}-${y}`} onClick={() => onClick(x, y)}>
               {color !== 0 && (
-                <div className={styles.stone} style={{ background: color === 1 ? `#000` : '#fff' }}>
+                <div
+                  className={styles.stone}
+                  style={{ background: ['#000', '#fff', ''][color - 1] }}
+                >
                   {/* <div className = {styles.empty}> {turncolor: }</div> */}{' '}
                 </div>
               )}

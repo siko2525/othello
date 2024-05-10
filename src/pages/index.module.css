@@ -15,6 +15,7 @@
   width: 640px;
   height: 640px;
   font-size: 0;
+  animation: board infinite 3s linear;
 }
 
 .cell {
@@ -30,13 +31,30 @@
   width: 56px;
   height: 56px;
   border-radius: 30px;
-  background-color: white;
 }
 
-.turn{
+/* @keyframes board {
+  0% {
+    background-color: #000;
+  }
+
+  50% {
+    background-color: #000;
+  }
+
+  50.1% {
+    background-color: #fff;
+  }
+
+  100% {
+    background-position: #fff;
+  }
+} */
+
+.turn {
   width: 640px;
   height: 80px;
   font-size: 50px;
   text-align: center;
   background-color: #7fffd4;
-  }
+}
