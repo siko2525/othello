@@ -24,6 +24,7 @@ const Home = () => {
     [1, -1],
   ];
   const onClick = (x: number, y: number) => {
+    if (board[x][y] % 3 !== 0) return;
     const newBoard = structuredClone(board);
     flipSide(newBoard, x, y);
     for (let i = 1; i < 8; i++) {
@@ -84,7 +85,7 @@ const Home = () => {
               {color !== 0 && (
                 <div
                   className={styles.stone}
-                  style={{ background: ['#000', '#fff', ''][color - 1] }}
+                  style={{ background: ['#000', '#fff', 'yellow'][color - 1] }}
                 >
                   {/* <div className = {styles.empty}> {turncolor: }</div> */}{' '}
                 </div>
