@@ -6,10 +6,10 @@ const Home = () => {
   const [board, setBoard] = useState([
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 2, 1, 0, 0, 0],
-    [0, 0, 0, 1, 2, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 3, 0, 0, 0, 0],
+    [0, 0, 3, 2, 1, 0, 0, 0],
+    [0, 0, 0, 1, 2, 3, 0, 0],
+    [0, 0, 0, 0, 3, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
   ]);
@@ -78,21 +78,44 @@ const Home = () => {
   const onClick = (x: number, y: number) => {
     const newBoard = structuredClone(board);
     //useStateで管理されてる値は直接いじらない、よってクローンしてboardを作成
-    if (board[y][x] === 1 || board[y][x] === 2) return;
+    if (board[y][x] !== 3) return;
     for (const dir of directions) {
       //directionsの中身を8個にわけてdirにしている、forが回るごとに上から取り出されるようになっている
       for (let i = 1; i < 8; i++) {
         if (board[y + i * dir[0]] === undefined) break;
-        if (board[y + i * dir[0]][x + i * dir[1]] === 3 - turnColor) continue;
-        if (board[y + i * dir[0]][x + i * dir[1]] === turnColor && i !== 1) {
+        else if (board[y + i * dir[0]][x + i * dir[1]] === turnColor && i === 1) break;
+        else if (board[y + i * dir[0]][x + i * dir[1]] % 3 === 0) break;
+        else if (board[y + i * dir[0]][x + i * dir[1]] === 3 - turnColor) continue;
+        else if (board[y + i * dir[0]][x + i * dir[1]] === turnColor && i !== 1) {
           newBoard[y][x] = turnColor;
           for (let j = 1; j < i; j++) {
             newBoard[y + j * dir[0]][x + j * dir[1]] = turnColor;
           }
           setTurnColor(3 - turnColor);
-          setBoard(newBoard);
         }
-        if (board[y + i * dir[0]][x + i * dir[1]] === 0) break;
+      }
+    }
+    candidate(newBoard);
+    setBoard(newBoard);
+  };
+
+  const candidate = (board: number[][]) => {
+    for (let y = 0; y < 8; y++) {
+      for (let x = 0; x < 8; x++) {
+        board[y][x] %= 3;
+        for (const dir of directions) {
+          if (board[y][x] % 3 !== 0) break;
+          for (let i = 1; i < 8; i++) {
+            if (board[y + i * dir[0]] === undefined) break;
+            if (board[y + i * dir[0]][x + i * dir[1]] === 3 - turnColor && i === 1) break;
+            if (board[y + i * dir[0]][x + i * dir[1]] === turnColor) continue;
+            if (board[y + i * dir[0]][x + i * dir[1]] === 3 - turnColor && i !== 1) {
+              board[y][x] = 3;
+              break;
+            }
+            if (board[y + i * dir[0]][x + i * dir[1]] % 3 === 0) break;
+          }
+        }
       }
     }
   };
