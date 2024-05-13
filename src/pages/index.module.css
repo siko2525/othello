@@ -58,3 +58,15 @@
   text-align: center;
   background-color: #7fffd4;
 }
+
+.whitecount {
+  width: 640px;
+  height: 80px;
+  font-size: 50px;
+}
+
+.blackcount {
+  width: 640px;
+  height: 80px;
+  font-size: 50px;
+}

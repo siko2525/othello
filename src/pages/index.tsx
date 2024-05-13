@@ -2,6 +2,8 @@ import { useState } from 'react';
 import styles from './index.module.css';
 
 const Home = () => {
+  const [whitecount, setWhite_count] = useState(0);
+  const [blackcount, setBlack_count] = useState(0);
   const [turnColor, setTurnColor] = useState(1);
   const [board, setBoard] = useState([
     [0, 0, 0, 0, 0, 0, 0, 0],
@@ -35,9 +37,6 @@ const Home = () => {
   //   }
   //   setBoard(newBoard);
   // };
-
-  // const flipSide = (board: number[][], x: number, y: number) => {
-  //   if (board[y][x] === 0) return;
   //   for (const dir of directions) {
   //     for (let index = 1; index < 8; index++) {
   //       if (board[y + index * dir[1]] === undefined) {
@@ -100,6 +99,8 @@ const Home = () => {
   };
 
   const candidate = (board: number[][]) => {
+    let white_count = 0;
+    let black_count = 0;
     for (let y = 0; y < 8; y++) {
       for (let x = 0; x < 8; x++) {
         board[y][x] %= 3;
@@ -116,8 +117,15 @@ const Home = () => {
             if (board[y + i * dir[0]][x + i * dir[1]] % 3 === 0) break;
           }
         }
+        if (board[y][x] === 2) {
+          white_count += 1;
+        } else if (board[y][x] === 1) {
+          black_count += 1;
+        }
       }
     }
+    setWhite_count(white_count);
+    setBlack_count(black_count);
   };
 
   return (
@@ -139,6 +147,8 @@ const Home = () => {
         )}
       </div>
       <div className={styles.turn}>{turnColor === 1 ? '黒のターン' : '白のターン'}</div>
+      <div>白の数{whitecount}</div>
+      <div>黒の数{blackcount}</div>
     </div>
   );
 };
