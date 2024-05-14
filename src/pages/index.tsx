@@ -2,8 +2,8 @@ import { useState } from 'react';
 import styles from './index.module.css';
 
 const Home = () => {
-  const [whitecount, setWhite_count] = useState(0);
-  const [blackcount, setBlack_count] = useState(0);
+  const [whitecount, setWhite_count] = useState(2);
+  const [blackcount, setBlack_count] = useState(2);
   const [turnColor, setTurnColor] = useState(1);
   const [board, setBoard] = useState([
     [0, 0, 0, 0, 0, 0, 0, 0],
@@ -77,7 +77,10 @@ const Home = () => {
   const onClick = (x: number, y: number) => {
     const newBoard = structuredClone(board);
     //useStateで管理されてる値は直接いじらない、よってクローンしてboardを作成
-    if (board[y][x] !== 3) return;
+    if (board[y][x] !== 3) {
+      end = 1;
+      return;
+    }
     for (const dir of directions) {
       //directionsの中身を8個にわけてdirにしている、forが回るごとに上から取り出されるようになっている
       for (let i = 1; i < 8; i++) {
@@ -96,11 +99,11 @@ const Home = () => {
     }
     candidate(newBoard);
     setBoard(newBoard);
+    judgement(newBoard);
   };
 
   const candidate = (board: number[][]) => {
-    let white_count = 0;
-    let black_count = 0;
+    const pass = 0;
     for (let y = 0; y < 8; y++) {
       for (let x = 0; x < 8; x++) {
         board[y][x] %= 3;
@@ -116,7 +119,18 @@ const Home = () => {
             }
             if (board[y + i * dir[0]][x + i * dir[1]] % 3 === 0) break;
           }
+          // if (pass === 1) {
+          // }
         }
+      }
+    }
+  };
+
+  const judgement = (board: number[][]) => {
+    let white_count = 0;
+    let black_count = 0;
+    for (let x = 0; x < 8; x++) {
+      for (let y = 0; y < 8; y++) {
         if (board[y][x] === 2) {
           white_count += 1;
         } else if (board[y][x] === 1) {
@@ -128,8 +142,17 @@ const Home = () => {
     setBlack_count(black_count);
   };
 
+  let end;
+  if (whitecount === 0 || blackcount === 0) end = 1;
+
   return (
     <div className={styles.container}>
+      <div className={styles.judgement}>
+        {end === 1 &&
+          ['白の勝ち', '黒の勝ち', '引き分け'][
+            +(blackcount >= whitecount) + +(blackcount === whitecount)
+          ]}
+      </div>
       <div className={styles.board}>
         {board.map((row, y) =>
           row.map((color, x) => (
@@ -147,10 +170,10 @@ const Home = () => {
         )}
       </div>
       <div className={styles.turn}>{turnColor === 1 ? '黒のターン' : '白のターン'}</div>
-      <div>白の数{whitecount}</div>
-      <div>黒の数{blackcount}</div>
+      <div className={styles.turn}>
+        白{whitecount} 黒{blackcount}
+      </div>
     </div>
   );
 };
-
 export default Home;
