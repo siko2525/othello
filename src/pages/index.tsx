@@ -81,6 +81,7 @@ const Home = () => {
       end = 1;
       return;
     }
+    candidate(newBoard);
     for (const dir of directions) {
       //directionsの中身を8個にわけてdirにしている、forが回るごとに上から取り出されるようになっている
       for (let i = 1; i < 8; i++) {
@@ -103,7 +104,7 @@ const Home = () => {
   };
 
   const candidate = (board: number[][]) => {
-    const pass = 0;
+    let pass = 0;
     for (let y = 0; y < 8; y++) {
       for (let x = 0; x < 8; x++) {
         board[y][x] %= 3;
@@ -115,12 +116,33 @@ const Home = () => {
             if (board[y + i * dir[0]][x + i * dir[1]] === turnColor) continue;
             if (board[y + i * dir[0]][x + i * dir[1]] === 3 - turnColor && i !== 1) {
               board[y][x] = 3;
+              pass = 1;
               break;
             }
             if (board[y + i * dir[0]][x + i * dir[1]] % 3 === 0) break;
           }
-          // if (pass === 1) {
-          // }
+        }
+      }
+    }
+    if (pass !== 1) {
+      setTurnColor(turnColor);
+      for (let y = 0; y < 8; y++) {
+        for (let x = 0; x < 8; x++) {
+          board[y][x] %= 3;
+          for (const dir of directions) {
+            if (board[y][x] % 3 !== 0) break;
+            for (let i = 1; i < 8; i++) {
+              if (board[y + i * dir[0]] === undefined) break;
+              if (board[y + i * dir[0]][x + i * dir[1]] === turnColor && i === 1) break;
+              if (board[y + i * dir[0]][x + i * dir[1]] === 3 - turnColor) continue;
+              if (board[y + i * dir[0]][x + i * dir[1]] === turnColor && i !== 1) {
+                board[y][x] = 3;
+                console.log('tinpo');
+                break;
+              }
+              if (board[y + i * dir[0]][x + i * dir[1]] % 3 === 0) break;
+            }
+          }
         }
       }
     }
